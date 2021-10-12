@@ -1,0 +1,50 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Nomad Friends"
+basePath: "/api/v1"
+tags:
+  - name: "Nomads"
+schemes:
+  - "https"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+paths:
+  /accounts:
+    post:
+      tags:
+        - "Nomads"
+      summary: "Add a new user account"
+      operationId: "register"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Account to add to the store"
+          required: true
+          schema:
+            $ref: "#/definitions/Account"
+      responses:
+        201:
+          description: "User account added"
+      x-swagger-router-controller: "web.controllers.accounts_controller"
+definitions:
+  Account:
+    type: "object"
+    required:
+      - "email"
+      - "password"
+      - "firstName"
+      - "lastName"
+    properties:
+      id:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
