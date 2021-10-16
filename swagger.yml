@@ -6,6 +6,7 @@ info:
 servers:
   # Added by API Auto Mocking Plugin
   - url: http://127.0.0.1:5000/
+  - url: https://nomadfriends-backend.herokuapp.com/
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/Felix-Bruning-Softwa/Nomadfriends/1.1.0
 paths:
