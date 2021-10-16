@@ -14,5 +14,5 @@ def create_app():
     app.add_api("swagger.yml", strict_validation=True)
     flask_app = app.app
     flask_app.json_encoder = encoder.JSONEncoder
-
+    print("App launched")
     return flask_app
