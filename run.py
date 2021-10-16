@@ -16,3 +16,6 @@ def create_app():
     flask_app.json_encoder = encoder.JSONEncoder
 
     return flask_app
+
+
+app = create_app()
