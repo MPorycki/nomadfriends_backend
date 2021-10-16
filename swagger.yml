@@ -9,6 +9,12 @@ servers:
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/Felix-Bruning-Softwa/Nomadfriends/1.1.0
 paths:
+  /:
+    get:
+      operationId: web.controllers.users_controller.handle_main
+      responses:
+        "200":
+          description: The app works!
   /login:
     post:
       operationId: web.controllers.users_controller.handle_login

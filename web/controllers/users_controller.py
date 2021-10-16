@@ -35,3 +35,7 @@ def handle_update_user():
 
 def handle_get_all_users():
     pass
+
+
+def handle_main():
+    return "Hello, world!", 200
