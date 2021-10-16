@@ -9,7 +9,7 @@ def create_app():
     abs_file_path = os.path.abspath(os.path.dirname(__file__))
     openapi_path = abs_file_path
     app = connexion.FlaskApp(
-        __name__, specification_dir=openapi_path, options={"swagger_ui": True, "serve_spec": True}
+        __name__, specification_dir=openapi_path, options={"swagger_ui": False, "serve_spec": False}
     )
     app.add_api("swagger.yml", strict_validation=True)
     flask_app = app.app

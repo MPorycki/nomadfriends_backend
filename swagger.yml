@@ -1,50 +1,226 @@
-swagger: "2.0"
+openapi: 3.0.0
 info:
-  version: "1.0.0"
-  title: "Nomad Friends"
-basePath: "/api/v1"
-tags:
-  - name: "Nomads"
-schemes:
-  - "https"
-consumes:
-  - "application/json"
-produces:
-  - "application/json"
+  version: 1.1.1
+  title: Nomadfriends API
+  description: ""
+servers:
+  # Added by API Auto Mocking Plugin
+  - url: http://127.0.0.1:5000/
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/Felix-Bruning-Softwa/Nomadfriends/1.1.0
 paths:
-  /accounts:
+  /login:
     post:
-      tags:
-        - "Nomads"
-      summary: "Add a new user account"
-      operationId: "register"
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "Account to add to the store"
-          required: true
-          schema:
-            $ref: "#/definitions/Account"
+      operationId: web.controllers.users_controller.handle_login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
       responses:
-        201:
-          description: "User account added"
-      x-swagger-router-controller: "web.controllers.accounts_controller"
-definitions:
-  Account:
-    type: "object"
-    required:
-      - "email"
-      - "password"
-      - "firstName"
-      - "lastName"
-    properties:
-      id:
-        type: "string"
-      email:
-        type: "string"
-      password:
-        type: "string"
-      firstName:
-        type: "string"
-      lastName:
-        type: "string"
+        "200":
+          description: successful login returns a User object and sets a session cookie
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+  /sign-up:
+    post:
+      operationId: web.controllers.users_controller.sign_up
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: successful sign-up returns the newly created user object and sets a session cookie
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+  /my/profile:
+    get:
+      operationId: web.controllers.users_controller.handle_get_user
+      responses:
+        "200":
+          description: Returns the current user's profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+    post:
+      operationId: web.controllers.users_controller.handle_update_user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Profile"
+      responses:
+        "200":
+          description: Returns the updated Profile object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+  /my/trips:
+    get:
+      operationId: web.controllers.trips_controller.handle_get_user_trips
+      description: Returns a list of the authenticated user's trips
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Trip"
+    post:
+      operationId: web.controllers.trips_controller.handle_create_trip
+      description: Create one or more trips
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/Trip"
+      responses:
+        "200":
+          description: Successful response
+
+  /my/friends:
+    get:
+      operationId: web.controllers.users_controller.handle_get_all_users
+      description: For v.1.x returns all users. Will be limited to friends only later.
+      responses:
+        "200":
+          description: All the friends of the authenticated user.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
+        profile:
+          $ref: "#/components/schemas/Profile"
+        trips:
+          type: array
+          items:
+            $ref: "#/components/schemas/Trip"
+    Profile:
+      type: object
+      required:
+        - userId
+        - displayName
+        - languages
+      properties:
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+        displayName:
+          type: string
+          nullable: false
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        avatar:
+          type: string
+          nullable: true
+        dateOfBirth:
+          type: string
+          format: date
+          nullable: true
+        languages:
+          description: List of ISO-639-1 language codes
+          type: array
+          items:
+            type: string
+        phone:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: false
+    Trip:
+      type: object
+      required:
+        - id
+        - userId
+        - place
+        - arrivalAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        place:
+          $ref: "#/components/schemas/Place"
+        arrivalAt:
+          type: string
+          format: date
+          nullable: false
+        departureAt:
+          type: string
+          format: date
+          nullable: true
+    Place:
+      description: A place corresponds to a place on the google places-API. It's ID should match the google place ID.
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        lat:
+          type: number
+          nullable: true
+        lng:
+          type: number
+          nullable: true
