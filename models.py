@@ -53,7 +53,8 @@ class Users(base):
     phone = Column(String, nullable=True)
 
     def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns if
+                c.name not in ["hashed_password", "created_at"]}
 
 
 class Sessions(base):

@@ -84,3 +84,17 @@ def get_user(_user_id: str) -> dict:
         user["id"] = user_profile.id
         user["trips"] = get_user_trips(user["id"])
     return user
+
+
+def get_all_users() -> list:
+    """
+    Returns the list of all users.
+    :return: List with all the users according to the OpenAPI schema
+    """
+    response = []
+    with session_scope() as session:
+        users = [user.as_dict() for user in session.query(Users).all()]
+        for user in users:
+            response.append(
+                {"id": user["id"], "profile": user, "trips": get_user_trips(user["id"])})
+    return response

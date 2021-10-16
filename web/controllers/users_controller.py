@@ -1,7 +1,6 @@
 import connexion
-import six
 
-from web.handlers.users_handler import create_user, login
+from web.handlers.users_handler import create_user, login, get_all_users
 
 
 def sign_up() -> set:  # noqa: E501
@@ -34,7 +33,8 @@ def handle_update_user():
 
 
 def handle_get_all_users():
-    pass
+    response = get_all_users()
+    return response, 201
 
 
 def handle_main():
