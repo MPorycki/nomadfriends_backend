@@ -1,4 +1,5 @@
 from contextlib import contextmanager
+import os
 
 from sqlalchemy import (
     create_engine,
@@ -12,9 +13,13 @@ from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import Date, Float
 from sqlalchemy.dialects.postgresql import UUID
 
-from config import host, database, user, password
 
-db = create_engine(f"postgresql://{user}:{password}@{host}/{database}")
+if os.environ.get("FLASK_ENV") == "development":
+    from config import host, database, user, password
+    db = create_engine(f"postgresql://{user}:{password}@{host}/{database}")
+else:
+    from settings import HOST, DATABASE, DB_USER, DB_PASSWORD
+    db = create_engine(f"postgresql://{DB_USER}:{DB_PASSWORD}@{HOST}/{DATABASE}")
 base = declarative_base()
 Session = scoped_session(sessionmaker(db))
 session = Session()
