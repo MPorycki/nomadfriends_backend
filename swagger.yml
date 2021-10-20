@@ -78,7 +78,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Profile"
-    post:
+    patch:
       operationId: web.controllers.users_controller.handle_update_user
       requestBody:
         required: true

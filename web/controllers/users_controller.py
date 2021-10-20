@@ -1,6 +1,6 @@
-import connexion
+import connexion  # TODO import more specific objects from the lib (less code)
 
-from web.handlers.users_handler import create_user, login, get_all_users
+from web.handlers.users_handler import create_user, edit_user_data, login, get_all_users
 
 
 def sign_up() -> set:  # noqa: E501
@@ -29,7 +29,11 @@ def handle_get_user():
 
 
 def handle_update_user():
-    pass
+    if connexion.request.is_json:
+        response = edit_user_data(connexion.request.get_json())
+    if not response:
+        return "Not all required data was provided.", 400
+    return response, 201
 
 
 def handle_get_all_users():

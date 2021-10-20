@@ -98,3 +98,26 @@ def get_all_users() -> list:
             response.append(
                 {"id": user["id"], "profile": user, "trips": get_user_trips(user["id"])})
     return response
+
+
+def edit_user_data(data: dict) -> dict:
+    """
+    Updates user object based on provided data
+    :param data: Data for all user fields
+    :return: Updated user object
+    """
+    with session_scope() as _session:
+        user = _session.query(Users).filter(Users.id == data["userId"]).first()
+        try:
+            user.email = data["email"]
+            user.first_name = data["firstName"]
+            user.last_name = data["lastName"]
+            user.display_name = data["displayName"]
+            user.avatar = data["avatar"]
+            user.phone = data["phone"]
+            user.date_of_birth = data["dateOfBirth"]
+            user.languages = data["languages"]
+        except KeyError:
+            return None
+        response = user.as_dict()
+    return response
