@@ -11,10 +11,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import Date, Float
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, ARRAY
 
-
-if os.environ.get("FLASK_ENV") == "development":
+if os.environ.get("FLASK_ENV") in ("development", None):
     from config import host, database, user, password
     db = create_engine(f"postgresql://{user}:{password}@{host}/{database}")
 else:
@@ -56,6 +55,8 @@ class Users(base):
     display_name = Column(String(length=32), nullable=True)
     avatar = Column(String, nullable=True)
     phone = Column(String, nullable=True)
+    date_of_birth = Column(Date, nullable=True)
+    languages = Column(ARRAY(String))
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns if
@@ -77,9 +78,10 @@ class Places(base):
     __tablename__ = "places"
 
     id = Column(UUID(as_uuid=True), primary_key=True)
-    name = Column(String, nullable=False)
-    lat = Column(Float)
-    lng = Column(Float)
+    country = Column(String, nullable=False)
+    city = Column(String, nullable=True)
+    lat = Column(Float, nullable=True)
+    lng = Column(Float, nullable=True)
 
 
 class Trips(base):
