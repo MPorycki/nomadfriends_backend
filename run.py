@@ -1,6 +1,7 @@
 import os
 
 import connexion
+from flask_cors import CORS
 
 from web import encoder
 
@@ -14,6 +15,7 @@ def create_app():
     app.add_api("swagger.yml", strict_validation=True)
     flask_app = app.app
     flask_app.json_encoder = encoder.JSONEncoder
+    CORS(app.app)
 
     return flask_app
 
