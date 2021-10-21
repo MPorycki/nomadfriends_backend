@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 1.1.1
+  version: 1.1.2
   title: Nomadfriends API
   description: ""
 servers:
@@ -39,9 +39,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/User"
   /sign-up:
     post:
       operationId: web.controllers.users_controller.sign_up
@@ -65,9 +63,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/User"
   /my/profile:
     get:
       operationId: web.controllers.users_controller.handle_get_user
@@ -204,6 +200,23 @@ components:
           format: uuid
         place:
           $ref: "#/components/schemas/Place"
+        arrivalAt:
+          type: string
+          format: date
+          nullable: false
+        departureAt:
+          type: string
+          format: date
+          nullable: true
+    InTrip:
+      type: object
+      description: Input Type to create a Trip
+      required:
+        - place
+        - arrivalAt
+      properties:
+        place:
+          $ref: '#/components/schemas/Place'
         arrivalAt:
           type: string
           format: date
