@@ -10,4 +10,4 @@ def create_place(place_data: dict):
 
 def get_place(place_id: str) -> Places:
     with session_scope() as _session:
-        return _session.query(Places).filter(id == place_id).first()
+        return _session.query(Places).filter(Places.id == place_id).first()
