@@ -4,8 +4,8 @@ from web.handlers.users_handler import create_user, edit_user_data, login, get_a
 
 
 def sign_up() -> set:  # noqa: E501
-    """Add a new user account
-
+    """
+    Add a new user account
     """
     if connexion.request.is_json:
         response = create_user(user_data=connexion.request.get_json())

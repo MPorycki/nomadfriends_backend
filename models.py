@@ -77,7 +77,7 @@ class Sessions(base):
 class Places(base):
     __tablename__ = "places"
 
-    id = Column(UUID(as_uuid=True), primary_key=True)
+    id = Column(String, primary_key=True)
     country = Column(String, nullable=False)
     city = Column(String, nullable=True)
     lat = Column(Float, nullable=True)
@@ -93,7 +93,7 @@ class Trips(base):
         ForeignKey(Users.id, onupdate="CASCADE", ondelete="CASCADE"),
     )
     place_id = Column(
-        UUID(as_uuid=True),
+        String,
         ForeignKey(Places.id, onupdate="CASCADE", ondelete="CASCADE"),
     )
     arrival_at = Column(Date, nullable=False)

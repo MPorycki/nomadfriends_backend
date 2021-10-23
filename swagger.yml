@@ -112,7 +112,7 @@ paths:
             schema:
               type: array
               items:
-                $ref: "#/components/schemas/Trip"
+                $ref: "#/components/schemas/InTrip"
       responses:
         "200":
           description: Successful response
