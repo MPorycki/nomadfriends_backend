@@ -13,12 +13,18 @@ from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import Date, Float
 from sqlalchemy.dialects.postgresql import UUID, ARRAY
 
+from web.util import convert_to_camelcase
+
 if os.environ.get("FLASK_ENV") in ("development", None):
     from config import host, database, user, password
+
     db = create_engine(f"postgresql://{user}:{password}@{host}/{database}")
 else:
     from settings import HOST, DATABASE, DB_USER, DB_PASSWORD
-    db = create_engine(f"postgresql://{DB_USER}:{DB_PASSWORD}@{HOST}/{DATABASE}")
+
+    db = create_engine(
+        f"postgresql://{DB_USER}:{DB_PASSWORD}@{HOST}/{DATABASE}"
+    )
 base = declarative_base()
 Session = scoped_session(sessionmaker(db))
 session = Session()
@@ -59,8 +65,11 @@ class Users(base):
     languages = Column(ARRAY(String))
 
     def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns if
-                c.name not in ["hashed_password", "created_at"]}
+        return {
+            convert_to_camelcase(c.name): getattr(self, c.name)
+            for c in self.__table__.columns
+            if c.name not in ["hashed_password", "created_at"]
+        }
 
 
 class Sessions(base):
@@ -98,6 +107,13 @@ class Trips(base):
     )
     arrival_at = Column(Date, nullable=False)
     departure_at = Column(Date, nullable=True)
+
+    def as_dict(self):
+        return {
+            convert_to_camelcase(c.name): getattr(self, c.name)
+            for c in self.__table__.columns
+            if c.name not in ["departure_at"]
+        }
 
 
 base.metadata.create_all(db)

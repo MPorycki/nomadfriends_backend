@@ -1,6 +1,12 @@
 import connexion  # TODO import more specific objects from the lib (less code)
+from flask import make_response
 
-from web.handlers.users_handler import create_user, edit_user_data, login, get_all_users
+from web.handlers.users_handler import (
+    create_user,
+    edit_user_data,
+    login,
+    get_all_users,
+)
 
 
 def sign_up() -> set:  # noqa: E501
@@ -12,7 +18,10 @@ def sign_up() -> set:  # noqa: E501
         print(response)
     if not response["user"]:
         return response, 401
-    return response, 201
+    resp = make_authentication_response(
+        response["user"], response["sessionId"], response["user"]["id"]
+    )
+    return resp
 
 
 def handle_login():
@@ -21,7 +30,18 @@ def handle_login():
         response = login(body["email"], body["password"])
     if not response["user_id"]:
         return response, 401
-    return response, 201
+    resp = make_authentication_response(
+        response["user"], response["sessionId"], response["user_id"]
+    )
+    return resp
+
+
+def make_authentication_response(body, session_id, user_id):
+    resp = make_response(body)
+    resp.set_cookie("sessionId", str(session_id), httponly=True)
+    resp.set_cookie("userId", str(user_id), httponly=True)
+    resp.status_code = 200
+    return resp
 
 
 def handle_get_user():
