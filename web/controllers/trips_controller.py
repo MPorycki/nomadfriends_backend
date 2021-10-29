@@ -12,7 +12,7 @@ def handle_create_trip():
         return "No request body", 400
 
     for trip in request.get_json():
-        response = create_trip(trip_data=trip, _user_id=request.headers["userId"])
+        response = create_trip(trip_data=trip, _user_id=request.cookies["userId"])
     if not response:
         return "Something went wrong during trip creation", 400
     return response, 200
