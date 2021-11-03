@@ -4,8 +4,13 @@ from models import Trips, session_scope
 from web.handlers.places_handler import create_place, get_place
 
 
-def get_user_trips(user_id):
-    pass
+def get_user_trips(_user_id: str) -> list:
+    result = []
+    with session_scope() as _session:
+        trips = _session.query(Trips).filter(Trips.user_id == _user_id).all()
+        for trip in trips:
+            result.append(trip.as_dict())
+    return result
 
 
 def create_trip(trip_data: dict, _user_id: str) -> dict:

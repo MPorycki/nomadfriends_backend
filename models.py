@@ -112,7 +112,6 @@ class Trips(base):
         return {
             convert_to_camelcase(c.name): getattr(self, c.name)
             for c in self.__table__.columns
-            if c.name not in ["departure_at"]
         }
 
 

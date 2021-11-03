@@ -1,10 +1,11 @@
 from connexion import request
 
-from web.handlers.trips_handler import create_trip
+from web.handlers.trips_handler import create_trip, get_user_trips
 
 
 def handle_get_user_trips():
-    pass
+    response = get_user_trips(request.cookies["userId"])
+    return response, 200
 
 
 def handle_create_trip():
