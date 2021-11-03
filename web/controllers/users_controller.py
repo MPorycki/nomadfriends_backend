@@ -1,6 +1,7 @@
 import connexion  # TODO import more specific objects from the lib (less code)
 from flask import make_response
 
+from settings import DOMAIN
 from web.handlers.users_handler import (
     create_user,
     edit_user_data,
@@ -28,18 +29,22 @@ def handle_login():
     if connexion.request.is_json:
         body = connexion.request.get_json()
         response = login(body["email"], body["password"])
-    if not response["user_id"]:
+    if not response["user"]:
         return response, 401
     resp = make_authentication_response(
-        response["user"], response["sessionId"], response["user_id"]
+        response["user"], response["sessionId"], response["user"]["id"]
     )
     return resp
 
 
 def make_authentication_response(body, session_id, user_id):
     resp = make_response(body)
-    resp.set_cookie("sessionId", str(session_id), httponly=True)
-    resp.set_cookie("userId", str(user_id), httponly=True)
+    resp.set_cookie(
+        key="sessionId", value=str(session_id), domain=DOMAIN, httponly=True
+    )
+    resp.set_cookie(
+        key="userId", value=str(user_id), domain=DOMAIN, httponly=True
+    )
     resp.status_code = 200
     return resp
 

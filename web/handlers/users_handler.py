@@ -45,14 +45,20 @@ def login(email: str, raw_password: str) -> dict:
     :return: Session_id and the corresponding account_id or (None, None) if failed
     """
     with session_scope() as session:
-        user_id, hashed_password = session.query(Users.id, Users.hashed_password).filter(
-            Users.email == email).first()
+        user_id, hashed_password = (
+            session.query(Users.id, Users.hashed_password)
+            .filter(Users.email == email)
+            .first()
+        )
     if not user_id:
-        return {"user_id": None, "session_id": None}
+        return {"user": None, "sessionId": None}
     if sha256_crypt.verify(raw_password, hashed_password):
-        return {"user_id": user_id, "session_id": create_session_for_user(user_id)}
+        return {
+            "user": get_user(user_id),
+            "sessionId": create_session_for_user(user_id),
+        }
     else:
-        return {"user_id": None, "session_id": None}
+        return {"user": None, "sessionId": None}
 
 
 def create_session_for_user(_user_id: str):
@@ -63,7 +69,9 @@ def create_session_for_user(_user_id: str):
     """
     _session_id = uuid.uuid4()
     new_session = Sessions(
-        user_id=_user_id, session_id=_session_id, created_at=datetime.datetime.now()
+        user_id=_user_id,
+        session_id=_session_id,
+        created_at=datetime.datetime.now(),
     )
     with session_scope() as _session:
         _session.add(new_session)
@@ -79,7 +87,9 @@ def get_user(_user_id: str) -> dict:
     """
     user = {}
     with session_scope() as session:
-        user_profile = session.query(Users).filter(Users.id == _user_id).first()
+        user_profile = (
+            session.query(Users).filter(Users.id == _user_id).first()
+        )
         user["profile"] = user_profile.as_dict()
         user["id"] = user_profile.id
         user["trips"] = get_user_trips(user["id"])
@@ -96,7 +106,12 @@ def get_all_users() -> list:
         users = [user.as_dict() for user in session.query(Users).all()]
         for user in users:
             response.append(
-                {"id": user["id"], "profile": user, "trips": get_user_trips(user["id"])})
+                {
+                    "id": user["id"],
+                    "profile": user,
+                    "trips": get_user_trips(user["id"]),
+                }
+            )
     return response
 
 
