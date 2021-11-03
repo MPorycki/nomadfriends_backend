@@ -39,8 +39,12 @@ def handle_login():
 
 def make_authentication_response(body, session_id, user_id):
     resp = make_response(body)
+    resp.headers.add("Access-Control-Expose-Headers", "Set-Cookie")
     resp.set_cookie(
-        key="sessionId", value=str(session_id), domain=DOMAIN, httponly=True
+        key="sessionId",
+        value=str(session_id),
+        domain=DOMAIN,
+        httponly=True,
     )
     resp.set_cookie(
         key="userId", value=str(user_id), domain=DOMAIN, httponly=True
