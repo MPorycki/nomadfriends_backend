@@ -87,8 +87,7 @@ class Places(base):
     __tablename__ = "places"
 
     id = Column(String, primary_key=True)
-    country = Column(String, nullable=False)
-    city = Column(String, nullable=True)
+    name = Column(String, nullable=True)
     lat = Column(Float, nullable=True)
     lng = Column(Float, nullable=True)
 

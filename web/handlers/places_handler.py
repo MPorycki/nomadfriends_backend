@@ -2,7 +2,7 @@ from models import Places, session_scope
 
 
 def create_place(place_data: dict):
-    place = Places(id=place_data["id"], country=place_data["country"], city=place_data["city"],
+    place = Places(id=place_data["id"], name=place_data["name"],
                    lat=place_data["lat"], lng=place_data["lng"])
     with session_scope() as _session:
         _session.add(place)
