@@ -1,7 +1,7 @@
 import uuid
 
 from models import Trips, session_scope
-from web.handlers.places_handler import create_place, get_place
+from web.handlers.places_handler import create_place, get_place, place_exists
 
 
 def get_user_trips(_user_id: str) -> list:
@@ -21,7 +21,7 @@ def create_trip(trip_data: dict, _user_id: str) -> dict:
     :return:
     """
     try:
-        if not get_place(trip_data["place"]["id"]):
+        if not place_exists(trip_data["place"]["id"]):
             create_place(trip_data["place"])
         trip = Trips(id=uuid.uuid4(), user_id=_user_id, arrival_at=trip_data["arrivalAt"],
                      place_id=trip_data["place"]["id"], departure_at=None)
