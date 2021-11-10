@@ -28,6 +28,6 @@ def create_trip(trip_data: dict, _user_id: str) -> dict:
         with session_scope() as _session:
             _session.add(trip)
             return trip.as_dict()
-    except Exception as e:
-        print(str(e))
+    except KeyError as e:
+        print(f"Missing input: {str(e)}")
         return None
