@@ -7,6 +7,7 @@ from web.handlers.users_handler import (
     edit_user_data,
     login,
     get_all_users,
+    get_user_profile
 )
 
 
@@ -61,7 +62,8 @@ def make_authentication_response(body, session_id, user_id):
 
 
 def handle_get_user():
-    pass
+    response = get_user_profile(connexion.request.cookies["userId"])
+    return response, 200
 
 
 def handle_update_user():
@@ -69,12 +71,12 @@ def handle_update_user():
         response = edit_user_data(connexion.request.get_json())
     if not response:
         return "Not all required data was provided.", 400
-    return response, 201
+    return response, 200
 
 
 def handle_get_all_users():
     response = get_all_users()
-    return response, 201
+    return response, 200
 
 
 def handle_main():

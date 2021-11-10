@@ -96,6 +96,22 @@ def get_user(_user_id: str) -> dict:
     return user
 
 
+def get_user_profile(_user_id: str) -> dict:
+    """
+    Returns user profile only, as defined in OpenAPI schema
+    :param _user_id: Id of the user profile to be returned
+    :return:
+    """
+    with session_scope() as _session:
+        user = _session.query(Users).filter(Users.id == _user_id).first()
+        if user:
+            result = user.as_dict()
+            result["userId"] = result.pop("id")
+            return result
+        else:
+            return {}
+
+
 def get_all_users() -> list:
     """
     Returns the list of all users.
