@@ -106,7 +106,7 @@ def get_user_profile(_user_id: str) -> dict:
         user = _session.query(Users).filter(Users.id == _user_id).first()
         if user:
             result = user.as_dict()
-            result["userId"] = result.pop("id")
+            result["userId"] = result.pop("id")  # According to OpenAPI schema
             return result
         else:
             return {}

@@ -91,6 +91,12 @@ class Places(base):
     lat = Column(Float, nullable=True)
     lng = Column(Float, nullable=True)
 
+    def as_dict(self):
+        return {
+            convert_to_camelcase(c.name): getattr(self, c.name)
+            for c in self.__table__.columns
+        }
+
 
 class Trips(base):
     __tablename__ = "trips"

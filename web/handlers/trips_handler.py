@@ -1,7 +1,7 @@
 import uuid
 
 from models import Trips, session_scope
-from web.handlers.places_handler import create_place, get_place, place_exists
+from web.handlers.places_handler import create_or_get_place_if_exists, get_place
 
 
 def get_user_trips(_user_id: str) -> list:
@@ -9,7 +9,11 @@ def get_user_trips(_user_id: str) -> list:
     with session_scope() as _session:
         trips = _session.query(Trips).filter(Trips.user_id == _user_id).all()
         for trip in trips:
-            result.append(trip.as_dict())
+            to_append = trip.as_dict()
+            result.append(to_append)
+    for trip in result:
+        trip["place"] = get_place(trip["placeId"])
+        trip.pop("placeId")
     return result
 
 
@@ -21,13 +25,15 @@ def create_trip(trip_data: dict, _user_id: str) -> dict:
     :return:
     """
     try:
-        if not place_exists(trip_data["place"]["id"]):
-            create_place(trip_data["place"])
+        place = create_or_get_place_if_exists(trip_data["place"])
         trip = Trips(id=uuid.uuid4(), user_id=_user_id, arrival_at=trip_data["arrivalAt"],
                      place_id=trip_data["place"]["id"], departure_at=None)
         with session_scope() as _session:
             _session.add(trip)
-            return trip.as_dict()
+            result = trip.as_dict()
+            result.pop("placeId")
+            result["place"] = place
+            return result
     except KeyError as e:
         print(f"Missing input: {str(e)}")
         return None
