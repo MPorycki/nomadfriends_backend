@@ -1,13 +1,16 @@
 from connexion import request
 
 from web.handlers.trips_handler import create_trip, get_user_trips
+from web.util import is_authorized
 
 
+@is_authorized
 def handle_get_user_trips():
     response = get_user_trips(request.cookies["userId"])
     return response, 200
 
 
+@is_authorized
 def handle_create_trip():
     if not request.is_json:
         return "No request body", 400

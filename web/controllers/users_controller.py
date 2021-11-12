@@ -9,6 +9,7 @@ from web.handlers.users_handler import (
     get_all_users,
     get_user_profile
 )
+from web.util import is_authorized
 
 
 def sign_up() -> set:  # noqa: E501
@@ -61,11 +62,13 @@ def make_authentication_response(body, session_id, user_id):
     return resp
 
 
+@is_authorized
 def handle_get_user():
     response = get_user_profile(connexion.request.cookies["userId"])
     return response, 200
 
 
+@is_authorized
 def handle_update_user():
     if connexion.request.is_json:
         response = edit_user_data(connexion.request.get_json())
