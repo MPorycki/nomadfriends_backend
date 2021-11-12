@@ -7,7 +7,8 @@ from web.handlers.users_handler import (
     edit_user_data,
     login,
     get_all_users,
-    get_user_profile
+    get_user_profile,
+    logout,
 )
 from web.util import is_authorized
 
@@ -80,6 +81,36 @@ def handle_update_user():
 def handle_get_all_users():
     response = get_all_users()
     return response, 200
+
+
+@is_authorized
+def handle_logout():
+    body = logout(
+        connexion.request.cookies["sessionId"],
+        connexion.request.cookies["userId"],
+    )
+    resp = make_response(body)
+    resp.headers.add("Access-Control-Allow-Credentials", "true")
+    resp.headers.add("Access-Control-Expose-Headers", "Set-Cookie")
+    resp.headers.add("Access-Control-Allow-Headers", "Set-Cookie")
+    resp.set_cookie(
+        key="sessionId",
+        value="",
+        domain=DOMAIN,
+        httponly=True,
+        samesite=None,
+        expires=1,
+    )
+    resp.set_cookie(
+        key="userId",
+        value="",
+        domain=DOMAIN,
+        httponly=True,
+        samesite=None,
+        expires=1,
+    )
+    resp.status_code = 200
+    return resp
 
 
 def handle_main():

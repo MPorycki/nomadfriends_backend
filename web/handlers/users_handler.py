@@ -78,6 +78,14 @@ def create_session_for_user(_user_id: str):
     return _session_id
 
 
+def logout(_session_id: str, _user_id: str):
+    with session_scope() as _session:
+        _session.query(Sessions).filter(
+            Sessions.session_id == _session_id, Sessions.user_id == _user_id
+        ).delete()
+    return "User logged out."
+
+
 def get_user(_user_id: str) -> dict:
     """
     Returns user data as defined in OpenAPI schema.
