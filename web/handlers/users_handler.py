@@ -152,3 +152,18 @@ def edit_user_data(data: dict) -> dict:
             return None
         response = user.as_dict()
     return response
+
+
+def session_is_valid(_session_id, _user_id):
+    with session_scope() as _session:
+        session = (
+            _session.query(Sessions)
+            .filter(
+                Sessions.session_id == _session_id,
+                Sessions.user_id == _user_id,
+            )
+            .first()
+        )
+        if not session:
+            return False
+        return True

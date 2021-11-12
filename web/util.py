@@ -1,7 +1,11 @@
 import datetime
+from functools import wraps
 
+from connexion import request
 import six
 import typing
+
+import web.handlers.users_handler as users_handler
 
 
 def _deserialize(data, klass):
@@ -147,3 +151,20 @@ def convert_to_camelcase(word):
     return word.split("_")[0] + "".join(
         x.capitalize() or "_" for x in word.split("_")[1:]
     )
+
+
+def is_authorized(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            session_id = request.cookies["sessionId"]
+            user_id = request.cookies["userId"]
+        except Exception as e:
+            print(e)
+            return "Invalid session", 401
+        if users_handler.session_is_valid(session_id, user_id):
+            return func(**kwargs)
+        else:
+            return "Invalid session", 401
+
+    return wrapper
