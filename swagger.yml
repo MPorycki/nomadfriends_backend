@@ -70,6 +70,16 @@ paths:
       responses:
         "200":
           description: Returns confirmation that session has been deleted and deletes session cookies.
+  /me:
+    get:
+      operationId: web.controllers.users_controller.handle_session_check
+      responses:
+        "200":
+          description: Returns the current User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
   /my/profile:
     get:
       operationId: web.controllers.users_controller.handle_get_user

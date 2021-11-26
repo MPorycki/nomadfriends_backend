@@ -6,6 +6,7 @@ from web.handlers.users_handler import (
     create_user,
     edit_user_data,
     login,
+    get_user,
     get_all_users,
     get_user_profile,
     logout,
@@ -61,6 +62,12 @@ def make_authentication_response(body, session_id, user_id):
     )
     resp.status_code = 200
     return resp
+
+
+@is_authorized
+def handle_session_check():
+    response = get_user(connexion.request.cookies["userId"])
+    return response, 200
 
 
 @is_authorized
