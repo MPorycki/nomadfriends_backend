@@ -147,12 +147,6 @@ def _deserialize_dict(data, boxed_type):
     return {k: _deserialize(v, boxed_type) for k, v in six.iteritems(data)}
 
 
-def convert_to_camelcase(word):
-    return word.split("_")[0] + "".join(
-        x.capitalize() or "_" for x in word.split("_")[1:]
-    )
-
-
 def is_authorized(func):
     @wraps(func)
     def wrapper(*args, **kwargs):

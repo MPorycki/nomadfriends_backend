@@ -13,8 +13,6 @@ from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import Date, Float
 from sqlalchemy.dialects.postgresql import UUID, ARRAY
 
-from web.util import convert_to_camelcase
-
 if os.environ.get("FLASK_ENV") in ("development", None):
     from config import host, database, user, password
 
@@ -28,6 +26,12 @@ else:
 base = declarative_base()
 Session = scoped_session(sessionmaker(db))
 session = Session()
+
+
+def convert_to_camelcase(word):
+    return word.split("_")[0] + "".join(
+        x.capitalize() or "_" for x in word.split("_")[1:]
+    )
 
 
 @contextmanager
@@ -118,6 +122,23 @@ class Trips(base):
             convert_to_camelcase(c.name): getattr(self, c.name)
             for c in self.__table__.columns
         }
+
+
+class UserRelations(base):
+    __tablename__ = "user_relations"
+
+    first_user_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey(Users.id, onupdate="CASCADE", ondelete="CASCADE"),
+        primary_key=True,
+    )
+    second_user_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey(Users.id, onupdate="CASCADE", ondelete="CASCADE"),
+        primary_key=True,
+    )
+    relation_type = Column(String)
+    created_at = Column(TIMESTAMP)
 
 
 base.metadata.create_all(db)
