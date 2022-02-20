@@ -141,8 +141,8 @@ paths:
 
   /my/friends:
     get:
-      operationId: web.controllers.users_controller.handle_get_all_users
-      description: For v.1.x returns all users. Will be limited to friends only later.
+      operationId: web.controllers.users_controller.handle_get_users_friends
+      description: Returns all friends of the authenticated user.
       responses:
         "200":
           description: All the friends of the authenticated user.

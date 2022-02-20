@@ -11,6 +11,7 @@ from web.handlers.users_handler import (
     get_user_profile,
     logout,
 )
+from web.handlers.user_relations_handler import get_friends_of_user
 from web.util import is_authorized
 
 
@@ -85,8 +86,15 @@ def handle_update_user():
     return response, 200
 
 
+@is_authorized
 def handle_get_all_users():
     response = get_all_users()
+    return response, 200
+
+
+@is_authorized
+def handle_get_users_friends():
+    response = get_friends_of_user(connexion.request.cookies["userId"])
     return response, 200
 
 
