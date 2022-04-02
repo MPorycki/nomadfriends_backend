@@ -95,9 +95,7 @@ def get_user(_user_id: str) -> dict:
     """
     user = {}
     with session_scope() as session:
-        user_profile = (
-            session.query(Users).filter(Users.id == _user_id).first()
-        )
+        user_profile = session.query(Users).filter(Users.id == _user_id).first()
         user["profile"] = user_profile.as_dict()
         user["id"] = user_profile.id
         user["trips"] = get_user_trips(user["id"])

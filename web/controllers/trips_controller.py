@@ -23,9 +23,7 @@ def handle_create_trip():
         request.cookies["userId"]
     )  # Quick fix for now, so that FE does not duplicate trips
     for trip in request.get_json():
-        response.append(
-            create_trip(trip_data=trip, _user_id=request.cookies["userId"])
-        )
+        response.append(create_trip(trip_data=trip, _user_id=request.cookies["userId"]))
     if not response:
         return "Something went wrong during trip creation", 400
     return response, 200

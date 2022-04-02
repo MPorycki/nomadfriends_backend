@@ -20,9 +20,7 @@ if os.environ.get("FLASK_ENV") in ("development", None):
 else:
     from settings import HOST, DATABASE, DB_USER, DB_PASSWORD
 
-    db = create_engine(
-        f"postgresql://{DB_USER}:{DB_PASSWORD}@{HOST}/{DATABASE}"
-    )
+    db = create_engine(f"postgresql://{DB_USER}:{DB_PASSWORD}@{HOST}/{DATABASE}")
 base = declarative_base()
 Session = scoped_session(sessionmaker(db))
 session = Session()
@@ -139,6 +137,21 @@ class UserRelations(base):
     )
     relation_type = Column(String)
     created_at = Column(TIMESTAMP)
+
+
+class Invitations(base):
+    __tablename__ = "invitations"
+
+    id = Column(
+        UUID(as_uuid=True),
+        primary_key=True,
+    )
+    created_by = Column(
+        UUID(as_uuid=True),
+        ForeignKey(Users.id, onupdate="CASCADE", ondelete="CASCADE"),
+    )
+    created_at = Column(TIMESTAMP)
+    expires_at = Column(TIMESTAMP)
 
 
 base.metadata.create_all(db)

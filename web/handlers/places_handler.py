@@ -20,17 +20,10 @@ def create_place(place_data: dict):
 
 def get_place(place_id: str) -> Places:
     with session_scope() as _session:
-        return (
-            _session.query(Places)
-            .filter(Places.id == place_id)
-            .first()
-            .as_dict()
-        )
+        return _session.query(Places).filter(Places.id == place_id).first().as_dict()
 
 
 def place_exists(place_id: str) -> bool:
     with session_scope() as _session:
-        exists_instance = (
-            _session.query(Places).filter(Places.id == place_id).exists()
-        )
+        exists_instance = _session.query(Places).filter(Places.id == place_id).exists()
         return _session.query(exists_instance).scalar()
