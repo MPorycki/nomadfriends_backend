@@ -163,6 +163,22 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Invite"
+  /invite/accept/{id}:
+    post:
+      operationId: web.controllers.invitations_controller.handle_accept_invitation
+      description: accept an invite
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Invite has been successfully accepted, the users are friends now
+        "404":
+          description: The invite has expired, has already been accepted or could not be found
 components:
   schemas:
     User:

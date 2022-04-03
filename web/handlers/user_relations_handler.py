@@ -18,7 +18,7 @@ def create_friendship(first_user_id: str, second_user_id: str) -> bool:
             first_user_id=first_user_id,
             second_user_id=second_user_id,
             relation_type="FRIENDS",
-            created_at=datetime.datetime.utcnow(),
+            created_at=datetime.utcnow(),
         )
         with session_scope() as _session:
             _session.add(friendship)
