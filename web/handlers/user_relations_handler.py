@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import or_
+from sqlalchemy.exc import IntegrityError
 
 from models import UserRelations, session_scope, Users
 from web.handlers.trips_handler import get_user_trips
@@ -23,7 +24,7 @@ def create_friendship(first_user_id: str, second_user_id: str) -> bool:
         with session_scope() as _session:
             _session.add(friendship)
             return True
-    except Exception as e:
+    except IntegrityError as e:
         print(f"One of the users do not exist: {str(e)}")
         return False
 

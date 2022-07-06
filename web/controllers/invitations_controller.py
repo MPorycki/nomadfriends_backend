@@ -13,7 +13,7 @@ def create_new_invite():
 @is_authorized
 def handle_accept_invitation(id: str):
     response = accept_invitation(id, request.cookies["userId"])
-    if response:
-        return "Users are friends", 200
+    if response["result"]:
+        return response["reason"], 200
     else:
-        return "Friendship not created", 404
+        return "Friendship not created. " + response["reason"], 404

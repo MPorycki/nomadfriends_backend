@@ -23,7 +23,7 @@ def create_invitation(inviter_id: str):
         }
 
 
-def accept_invitation(invitation_id: str, invitee_id: str):
+def accept_invitation(invitation_id: str, invitee_id: str) -> dict:
     """
     Creating a user relation between provided users and deleting the invitation afterwards.
     """
@@ -31,13 +31,18 @@ def accept_invitation(invitation_id: str, invitee_id: str):
         inv = (
             _session.query(Invitations).filter(Invitations.id == invitation_id).first()
         )
-        if not inv or is_expired(inv.id, inv.expires_at):
-            return False
+        if not inv:
+            return {"result": False, "reason": "Invitation could not be found."}
+        if is_expired(inv.id, inv.expires_at):
+            return {"result": False, "reason": "Invitation had expired."}
         if create_friendship(inv.created_by, invitee_id):
             delete_invitation(inv.id)
-            return True
+            return {"result": True, "reason": "Friendship created succesfully."}
         else:
-            return False
+            return {
+                "result": False,
+                "reason": "One of the users do not exist or the friendship already exists.",
+            }
 
 
 def delete_invitation(invitation_id: str):
